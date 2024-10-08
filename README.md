@@ -108,6 +108,62 @@ Manage Jenkins > Manage Plugins > Available and search for the required plugins.
 
   Go to Manage Jenkins > Manage Credentials to add credentials such as GitHub access tokens and Docker Hub login details.
   
+## Step 4: Integrate Jenkins with GitHub
+
+Jenkins needs to pull your source code from GitHub.
+
+1. Install GitHub Plugin via the Jenkins plugin manager.
+
+2. Create a GitHub Repository and clone it:
+  ```
+  git clone https://github.com/yourusername/yourapp.git
+  ```
+3. Configure GitHub in Jenkins Job:
+  - When creating a Jenkins job, under "Source Code Management", select Git.
+  - Provide the GitHub repository URL.
+  - Add credentials (Personal Access Token) for authentication.
+
+## Step 5: Configure Webhooks for Jenkins Builds
+
+To automate the build trigger:
+
+1. Go to Your GitHub Repository:
+
+  - Navigate to Settings > Webhooks > Add webhook.
+  - Set the Payload URL to http://your-jenkins-url:8080/github-webhook/.
+
+  - In Jenkins, configure the job to trigger builds using webhooks:
+    Check the box for GitHub hook trigger for GITScm polling.
+
+## Step 6: Create Jenkins Freestyle Job
+A Freestyle Job can be used to build the web application and run unit tests:
+
+1. Go to Jenkins Dashboard and click New Item > Freestyle Project.
+
+2. Set the GitHub Repository under "Source Code Management".
+
+3. Add Build Steps to run unit tests or any other tasks
+
+4. Configure Post-build Actions to archive artifacts or notify teams.
+
+## Step 7: Create Jenkins Pipeline Script
+
+This is a more advanced setup where you define a Jenkins pipeline using code.
+
+Create a New Pipeline Job:
+
+Go to New Item > Pipeline.
+Write the Pipeline Script:
+
+
+
+
+
+
+
+
+
+
 
 
 
