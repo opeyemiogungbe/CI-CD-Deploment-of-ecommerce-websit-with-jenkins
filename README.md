@@ -150,16 +150,73 @@ A Freestyle Job can be used to build the web application and run unit tests:
 
 This is a more advanced setup where you define a Jenkins pipeline using code.
 
-Create a New Pipeline Job:
+1. Create a New Pipeline Job:
 
-Go to New Item > Pipeline.
-Write the Pipeline Script:
+  - Go to New Item > Pipeline.
 
+2.Write the Pipeline Script:
 
+3. Commit the Jenkinsfile to the root of your GitHub repository.
 
+# Step 8: Build Docker Images in Jenkins
 
+In the pipeline, you’ll need to build Docker images.
 
+  1.Install Docker on your Jenkins server:
+   
+    ```
+    sudo apt install docker.io
+    sudo usermod -aG docker jenkins
+    sudo systemctl restart jenkins
+    ```
+  2. Add a Docker Build Step:
+    ```
+    docker build -t your-app:latest
+    ```
 
+## Step 9: Running the Docker Container
+To deploy the application:
+
+1. Run the Container:
+  ```
+  docker run -d -p 80:80 your-app:latest
+  ```
+2. Access the Application:
+
+  - Open your browser and visit http://<your-server-ip> to view the running application.
+
+## Step 10: Push Docker Images to a Registry
+
+1. Add Docker Hub Credentials to Jenkins:
+
+  - Manage Jenkins > Manage Credentials > Global > Add Credentials.
+
+2. Push the Docker Image to Docker Hub within the pipeline:
+
+```
+docker login -u your-dockerhub-username -p your-password
+docker tag your-app:latest your-dockerhub-username/your-app:latest
+docker push your-dockerhub-username/your-app:latest
+```
+
+- Docker Image Creation:
+The Jenkins pipeline handles Docker image creation with 
+```
+docker build -t your-app:latest ..
+```
+
+- Running a Container:
+After building, the container can be started using
+```
+docker run -d -p 80:80 your-app:latest.
+```
+- Pushing Images to Docker Hub:
+The final Docker image is pushed using:
+```
+docker push your-dockerhub-username/your-app:latest
+```
+
+By following this guide, you will have a fully functional CI/CD pipeline set up for automating your web application deployment using Jenkins and Docker.
 
 
 
