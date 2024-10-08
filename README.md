@@ -67,7 +67,64 @@ sudo apt install jenkins -y
 sudo systemctl start jenkins
 sudo systemctl enable jenkins
 ```
-4. Open port 8080 in inbound rules on jenkins server to enable us access it on web browser
+
+4. Access Jenkins:
+Open port 8080 in inbound rules on jenkins server to enable us access it on web browser
 
 ![Screenshot 2023-11-08 083515](https://github.com/user-attachments/assets/b7b44a56-bd28-4e49-8e03-4d45b707a2b3)
+
+Open Jenkins in a web browser: http://<your-server-ip>:8080
+
+We are going to cat into /var/lib/jenkins/secrets/initialAdminPassword to get our password
+
+## Step 2: Set up Necessary Jenkins Plugins
+
+Once Jenkins is installed, install the following plugins:
+
+- Git Plugin (to integrate with GitHub).
+- Docker Pipeline Plugin (to enable Docker commands within Jenkins).
+- Pipeline Plugin (to write pipeline-as-code with Jenkinsfile).
+- GitHub Plugin (to integrate webhooks from GitHub).
+
+Navigate to:
+
+Manage Jenkins > Manage Plugins > Available and search for the required plugins.
+
+## Step 3: Configure Jenkins Security
+
+1. Create a Jenkins User to avoid using the default admin account:
+
+  - Go to Manage Jenkins > Manage Users > Create User.
+
+2. Set Global Security Settings:
+
+  - Manage Jenkins > Configure Global Security
+  - Enable Jenkins' own user database for security.
+  - Configure roles and permissions as needed.
+
+3. Add Credentials:
+
+- You’ll need to store credentials for GitHub, Docker Hub, and possibly other services like cloud providers.
+
+  Go to Manage Jenkins > Manage Credentials to add credentials such as GitHub access tokens and Docker Hub login details.
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
