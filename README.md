@@ -156,23 +156,97 @@ This is a more advanced setup where you define a Jenkins pipeline using code.
 
 2.Write the Pipeline Script:
 
-3. Commit the Jenkinsfile to the root of your GitHub repository.
+```
+pipeline {
+    agent any
+
+    stages {
+        stage('Connect To Github') {
+            steps {
+                checkout([$class: 'GitSCM', 
+                  branches: [[name: '*/main']],
+                  doGenerateSubmoduleConfigurations: false,
+                  extensions: [],
+                  userRemoteConfigs: [[url: 'https://github.com/opeyemiogungbe/CittiTech-Consult.git']]
+                ])
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t dockerfile .'
+                }
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    sh 'docker run -itd -p 8081:80 dockerfile'
+                }
+            }
+        }
+    }
+}
+```
+![Screenshot 2024-07-14 075144](https://github.com/user-attachments/assets/5b2b32b7-be23-4d8e-b004-22ce10c48180)
+
+![Screenshot 2024-07-14 075202](https://github.com/user-attachments/assets/be60efed-3645-4d89-a559-d1c142387c9b)
+
+![Screenshot 2024-07-14 075217](https://github.com/user-attachments/assets/b380b638-33ac-4dee-a8aa-8b04e6744a80)
+
+3. We are going to commit the Jenkinsfile to the root of our GitHub repository.
 
 # Step 8: Build Docker Images in Jenkins
 
-In the pipeline, you’ll need to build Docker images.
+In the pipeline, we’ll need to build Docker images.
 
-  1.Install Docker on your Jenkins server:
-   
-    ```
-    sudo apt install docker.io
-    sudo usermod -aG docker jenkins
-    sudo systemctl restart jenkins
-    ```
-  2. Add a Docker Build Step:
+1. Install Docker on our Jenkins server:
+   - We are going to create docker.sh files at the root folder and open it up with vi/vim
+   - we are going put in all the necesarry docker dependencies and download docker
+
+![Screenshot 2024-07-14 045118](https://github.com/user-attachments/assets/37b2d4d0-8864-43d1-a389-54e817a544a5)
+
+```
+# Docker Installation
+sudo apt update -y
+sudo apt-get install ca-certificates curl gnupg -y
+sudo install -m 0755 -d /etc/apt/keyrings
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+# Add the repository to Apt sources:
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu/ $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt update -y
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+sudo systemctl status docker
+```
+![Screenshot 2024-07-14 045229](https://github.com/user-attachments/assets/c74e79e6-16ae-400e-954b-111531114eef)
+
+- We are going to set permisson for the docker file so it can be executable and run the file
+```
+chmod u+x docker.sh (for permission)
+./docker.sh
+```
+
+![Screenshot 2024-07-07 103547](https://github.com/user-attachments/assets/67ec8acc-e3d8-42f2-903b-ce72f20c01ef)
+
+- We are going to restart jenking and docker to make sure everything works our installation was successful
+
+![Screenshot 2024-07-14 062401](https://github.com/user-attachments/assets/7ec0a15c-212a-497e-be86-9af78b58f141)
+
+![Screenshot 2024-07-07 103621](https://github.com/user-attachments/assets/bae4ff25-720d-42b2-b9e4-7b12975007b8)
+
+Now we can see our installation is successful 
+
+2. Add a Docker Build Step:
     ```
     docker build -t your-app:latest
     ```
+    this build our container
 
 ## Step 9: Running the Docker Container
 To deploy the application:
@@ -181,9 +255,18 @@ To deploy the application:
   ```
   docker run -d -p 80:80 your-app:latest
   ```
+![Screenshot 2024-07-15 141020](https://github.com/user-attachments/assets/00ff28bb-8a5a-40b8-859d-626d68f22093)
+
+We can see our docker is live and running
+
 2. Access the Application:
 
   - Open your browser and visit http://<your-server-ip> to view the running application.
+
+![Screenshot 2024-07-14 084610](https://github.com/user-attachments/assets/30798ffa-d042-42c3-816f-aa85bc8366aa)
+
+A simple html and style.css was addecommerce website and we can see its live and working .
+
 
 ## Step 10: Push Docker Images to a Registry
 
