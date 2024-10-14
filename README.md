@@ -38,6 +38,8 @@ Before we begin, we must ensure we have the following:
 
 ### Architecture
 
+![image](https://github.com/user-attachments/assets/e3cacde8-d12c-4df6-ba44-5c419e38a8cf)
+
 This pipeline works as follows:
 
 we are going to push our code changes to the GitHub repository.
